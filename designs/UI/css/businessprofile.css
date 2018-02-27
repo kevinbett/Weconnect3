@@ -24,10 +24,11 @@ body {
 
 .dark{ 
 	padding: 15px;
-	background:#35424a;
+	background:#4885ed;
 	color: #ffffff;
-	margin-top: 10px;
+	margin-top: 70px;
 	margin-bottom: 10px;
+	font-size: 14px;
  }
 
 aside#sidebar{ 
