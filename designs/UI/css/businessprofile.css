@@ -24,6 +24,7 @@ body {
 
 .dark{ 
 	padding: 15px;
+	padding-top: 5px;
 	background:#4885ed;
 	color: #ffffff;
 	margin-top: 70px;
