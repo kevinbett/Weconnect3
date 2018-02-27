@@ -1,5 +1,3 @@
-
-
 .frame{ 
   width: 50vw;
   position: relative;
@@ -49,8 +47,9 @@ button:hover {
   opacity:1;
 }
 
-/* sign up button*/
-.signupbtn {
+/* Login button*/
+
+.loginbtn {
   float: left;
   width: 100%;
   font-size: 26px;
@@ -75,13 +74,26 @@ button:hover {
   display: table;
 }
 
+#reset{ 
+text-align: center;
+font-size: 14px;
+ }
+
+a {
+  text-decoration:none;
+}
+
+a:hover {
+ border-bottom-color: #f44292;
+
+}
 /* Mobile screens */
 @media screen and (max-width: 500px) {
-  .signupbtn {
+.loginbtn {
     width: 100%;
   }
 
-  .frame{ 
+.frame{ 
     width: 100vw;
    }
 }
