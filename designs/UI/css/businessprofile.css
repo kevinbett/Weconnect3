@@ -5,6 +5,15 @@
   margin: 0 auto;
  }
 
+.view { 
+ 	width: 80%;
+ 	margin: auto;
+ 	overflow: hidden;
+ 	padding: 20px;
+	border:#cccccc solid 1px;
+	margin-bottom: 5px;
+	background: #e6e6e6;
+  }
 
 body { 
 	font:15px/1.5 Arial, Helvetica,sans-serif;
@@ -58,6 +67,9 @@ hr {
   margin-bottom: 25px;
 }
 
+.button_1 { 
+	posistion: center;
+ }
 @media(max-width: 768px){ 
   article#main-col,
   aside#sidebar{
