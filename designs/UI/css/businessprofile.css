@@ -32,6 +32,16 @@ body {
 	font-size: 14px;
  }
 
+ .dark2{ 
+	padding: 15px;
+	padding-top: 5px;
+	background:#4885ed;
+	color: #ffffff;
+	margin-top: 15px;
+	margin-bottom: 10px;
+	font-size: 14px;
+ }
+
 aside#sidebar{ 
 	float: right;
 	width: 30%;
