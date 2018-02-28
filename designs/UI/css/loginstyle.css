@@ -87,6 +87,10 @@ a:hover {
  border-bottom-color: #f44292;
 
 }
+
+
+
+
 /* Mobile screens */
 @media screen and (max-width: 500px) {
 .loginbtn {
@@ -97,5 +101,3 @@ a:hover {
     width: 100vw;
    }
 }
-
-
