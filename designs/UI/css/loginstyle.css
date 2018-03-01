@@ -32,7 +32,7 @@ hr {
 }
 
 /* buttons */
-button {
+button, .signupbtn {
   background-color: #4CAF50;
   color: white;
   padding: 14px 20px;
@@ -43,7 +43,15 @@ button {
   opacity: 0.9;
 }
 
-button:hover {
+.signupbtn {
+  appearance: button;
+  padding-left: 0;
+  padding-right: 0;
+  text-align: center;
+
+}
+
+button:hover,a:hover {
   opacity:1;
 }
 
@@ -56,6 +64,21 @@ button:hover {
   background: #4885ed;
 }
 
+.signupbtn {
+  float: right;
+  width: 100%;
+  font-size: 26px;
+  background: #4885ed;
+}
+
+#bt1 { 
+  float: left;
+ }
+
+#bt2 { 
+  float: right;
+ }
+
 /* Container elements */
 .container {
   padding: 16px;
@@ -65,7 +88,7 @@ button:hover {
 
 .button_holder {
   margin: 0 auto;
-  width: 50%;
+  width: 49%;
   }
 
 .button_holder::after {
@@ -87,10 +110,6 @@ a:hover {
  border-bottom-color: #f44292;
 
 }
-
-
-
-
 /* Mobile screens */
 @media screen and (max-width: 500px) {
 .loginbtn {
@@ -101,3 +120,5 @@ a:hover {
     width: 100vw;
    }
 }
+
+
