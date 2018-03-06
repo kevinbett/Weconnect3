@@ -24,3 +24,10 @@ class BusinessTestCase(unittest.TestCase):
     def test_register(self):
         response = self.client().post("/auth/register", data=self.user)
         self.assertEquals("User Test User has been registered successfully", str(response.data.decode("utf-8")))
+
+    def test_login(self):
+        self.client().post("/auth/login", data=self.user)
+        response = self.client().post("/auth/login", data=self.user)
+        self.assertEquals("You have not filled in either the email or password", str(response.data.decode("utf-8")))
+
+
