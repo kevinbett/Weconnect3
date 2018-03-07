@@ -2,18 +2,15 @@
 from flask import Blueprint, request, jsonify
 from api.v1 import auth
 
-business_blueprint = Blueprint("posts", __name__)
-
-'''Initiating empty list'''
+business_blueprint = Blueprint("business", __name__, url_prefix='/api/v1/businesses')
 businesses = []
 
-''''''
-@business_blueprint.route("/businesses", methods=["POST", "GET"])
-def register_business(request):
-    name = request.args.get("name")
-    content = request.args.get("type")
+@business_blueprint.route('/', methods=["POST", "GET"])
+def register_business():
+    name = request.form.get("name")
+    type = request.form.get("type")
 
-    if not name or not content:
+    if not name or not type:
         return "You must enter both name and Type of business"
 
     last_business_id = businesses[len(businesses) - 1]["id"] if len(businesses) > 0 else 0
@@ -22,17 +19,17 @@ def register_business(request):
         "id": last_business_id + 1,
         "user_id": auth.logged_in_user["id"],
         "name": name,
-        "type": content
+        "type": type
     }
     businesses.append(business)
 
-    return "Business with name %s has been registered succesfully"%(name)
+    return "Business has been registered successfully"
 
 def view_businesses():
     return jsonify(businesses)
 
-@business_blueprint.route("businesses/<businessId>", methods=["PUT", "GET"])
-def update_business(request, id):
+@business_blueprint.route("/<businessId>", methods=["PUT", "GET"])
+def update_business(id):
     name = request.args.get("name")
     type = request.args.get("type")
 
@@ -48,7 +45,7 @@ def update_business(request, id):
             return "Business profile has been updated successfully"
     return "The business you entered does not exist"
 
-@business_blueprint.route("//businesses/<businessId>", methods=["DELETE"])
+@business_blueprint.route("/<businessId>", methods=["DELETE"])
 def delete_business(id):
     global businesses
     for business in businesses:
@@ -58,7 +55,7 @@ def delete_business(id):
     return "The business you entered does not exist"
 
 
-@business_blueprint.route("/businesses/<businessId>", methods=["GET"])
+@business_blueprint.route("/<businessId>", methods=["GET"])
 def get_businesses():
     name = request.args.get("name")
     type = request.args.get("type")
@@ -74,4 +71,3 @@ def get_businesses():
                 business["type"] = type
             return jsonify(businesses)
         return "The business you entered does not exist"
-
