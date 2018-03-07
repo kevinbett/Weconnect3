@@ -44,15 +44,6 @@ class BusinessTestCase(unittest.TestCase):
         response = self.client().post('login', data=data)
         self.assertEquals("Check Username or password", str(response.data.decode("utf-8")))
 
-
-    # def test_details_not_provided_failure(self):
-    #     self.client().post("/auth/register", data=self.user)
-    #     self.client().post("/auth/login", data=self.user)
-    #     response = self.client().post("/login/", data={})
-    #     self.assertEquals(
-    #         "You must enter both business name and type",
-    #         str(response.data.decode("utf-8")))
-    #
     def test_register_business(self):
         self.client().post('/register', data=self.user)
         self.client().post('/login', data=self.user)
