@@ -30,8 +30,8 @@ def register():
 
 @auth.route('/login', methods=["POST"])
 def login():
-    email = request.args.get('email')
-    password = request.args.get('password')
+    email = request.form.get('email')
+    password = request.form.get('password')
 
     if not email or not password:
         return "You have not filled in either the email or password"
@@ -42,9 +42,9 @@ def login():
         if user["email"] == email and user["password"] == password:
             global logged_in_user
             logged_in_user = user
-            return "You are now logged in as %s" % (logged_in_user["name"])
+            return "You are now logged in"
 
-    return "You are not registered. Please register before logged in"
+    return "Check Username or password"
 
 @auth.route('/logout', methods=["GET"])
 def logout():

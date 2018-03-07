@@ -29,34 +29,34 @@ def view_businesses():
     return jsonify(businesses)
 
 @business_blueprint.route("/<businessId>", methods=["PUT", "GET"])
-def update_business(id):
-    name = request.args.get("name")
-    type = request.args.get("type")
+def update_business(businessId):
+    name = request.form.get("name")
+    type = request.form.get("type")
 
     if not name and not type:
         return "You must to either the name or type of business to edit"
 
     for business in businesses:
-        if business["id"] == int(id) and business["user_id"] == auth.logged_in_user["id"]:
+        if business["id"] == int(businessId) and business["user_id"] == auth.logged_in_user["id"]:
             if len(name) > 0:
                 business["name"] = name
             if len(type) > 0:
                 business["type"] = type
-            return "Business profile has been updated successfully"
+            return "Business has been successfully edited"
     return "The business you entered does not exist"
 
 @business_blueprint.route("/<businessId>", methods=["DELETE"])
-def delete_business(id):
+def delete_business(businessId):
     global businesses
     for business in businesses:
-        if business["id"] == int(id) and business["user_id"] == auth.logged_in_user["id"]:
-            businesses = [business for business in businesses if business["id"] != id]
-            return "Business has been deleted successfully"
+        if business["id"] == int(businessId) and business["user_id"] == auth.logged_in_user["id"]:
+            businesses = [business for business in businesses if business["id"] != businessId]
+            return "Business has been successfully deleted"
     return "The business you entered does not exist"
 
 
 @business_blueprint.route("/<businessId>", methods=["GET"])
-def get_businesses():
+def get_businesses(businessId):
     name = request.args.get("name")
     type = request.args.get("type")
 
@@ -64,7 +64,7 @@ def get_businesses():
         return "You must to either the name or type of business to search"
 
     for business in businesses:
-        if business["id"] == int(id) and business["user_id"] == auth.logged_in_user["id"]:
+        if business["id"] == int(businessId) and business["user_id"] == auth.logged_in_user["id"]:
             if len(name) < 0:
                 business["name"] = name
             if len(type) < 0:
