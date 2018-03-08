@@ -46,7 +46,7 @@ def login():
 
     return "Check Username or password"
 
-@auth.route('/logout', methods=["GET"])
+@auth.route('/logout', methods=["POST"])
 def logout():
     global logged_in_user
     logged_in_user = None

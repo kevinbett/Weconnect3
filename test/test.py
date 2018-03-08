@@ -50,7 +50,7 @@ class BusinessTestCase(unittest.TestCase):
         response = self.client().post('/api/v1/businesses/', data=self.business)
         self.assertEquals("Business has been registered successfully", str(response.data.decode("utf-8")))
 
-    def test_edit_business(self):
+    def test_update_business(self):
         self.client().post('/register', data=self.user)
         self.client().post('/login', data=self.user)
         self.client().post('/api/v1/businesses/', data=self.business)
@@ -75,5 +75,14 @@ class BusinessTestCase(unittest.TestCase):
         self.client().post('/login', data=self.user)
         response = self.client().get("/api/v1/businesses/1")
         self.assertEquals(response.status_code, 200)
+
+    def test_retrieve_all_businesses(self):
+        self.client().post('/register', data=self.user)
+        self.client().post('/login', data=self.user)
+        response = self.client().get('/api/v1/businesses/')
+        self.assertEquals(response.status_code, 200)
+
+
+
 
 
