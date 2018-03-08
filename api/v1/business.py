@@ -10,6 +10,9 @@ def register_business():
     name = request.form.get("name")
     type = request.form.get("type")
 
+    if not auth.logged_in_user:
+        return 'You must be logged in to register business'
+
     if not name or not type:
         return "You must enter both name and Type of business"
 
@@ -28,7 +31,7 @@ def register_business():
 def view_businesses():
     return jsonify(businesses)
 
-@business_blueprint.route("/<businessId>", methods=["PUT", "GET"])
+@business_blueprint.route("/<businessId>", methods=["PUT"])
 def update_business(businessId):
     name = request.form.get("name")
     type = request.form.get("type")
@@ -57,17 +60,9 @@ def delete_business(businessId):
 
 @business_blueprint.route("/<businessId>", methods=["GET"])
 def get_businesses(businessId):
-    name = request.args.get("name")
-    type = request.args.get("type")
-
-    if not name and not type:
-        return "You must to either the name or type of business to search"
 
     for business in businesses:
         if business["id"] == int(businessId) and business["user_id"] == auth.logged_in_user["id"]:
-            if len(name) < 0:
-                business["name"] = name
-            if len(type) < 0:
-                business["type"] = type
-            return jsonify(businesses)
+            return business
+    else:
         return "The business you entered does not exist"

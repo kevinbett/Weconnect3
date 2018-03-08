@@ -49,7 +49,7 @@ class BusinessTestCase(unittest.TestCase):
         self.client().post('/login', data=self.user)
         response = self.client().post('/api/v1/businesses/', data=self.business)
         self.assertEquals("Business has been registered successfully", str(response.data.decode("utf-8")))
-    #
+
     def test_edit_business(self):
         self.client().post('/register', data=self.user)
         self.client().post('/login', data=self.user)
@@ -61,5 +61,19 @@ class BusinessTestCase(unittest.TestCase):
         self.client().post('/register', data=self.user)
         self.client().post('/login', data=self.user)
         self.client().post('/api/v1/businesses/', data=self.business)
-        response= self.client().delete("/api/v1/businesses/1")
+        response = self.client().delete("/api/v1/businesses/1")
         self.assertEquals("Business has been successfully deleted", str(response.data.decode("utf-8")))
+
+    def test_cannot_get_business(self):
+        self.client().post('/register', data=self.user)
+        self.client().post('/login', data=self.user)
+        response = self.client().get("/api/v1/businesses/29")
+        self.assertEquals("The business you entered does not exist", str(response.data.decode('utf-8')))
+
+    def test_can_get_business(self):
+        self.client().post('/register', data=self.user)
+        self.client().post('/login', data=self.user)
+        response = self.client().get("/api/v1/businesses/1")
+        self.assertEquals(response.status_code, 200)
+
+
