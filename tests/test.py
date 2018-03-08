@@ -10,7 +10,7 @@ class BusinessTestCase(unittest.TestCase):
         self.client = self.api.test_client
         self.user = {
             "id": 1,
-            "name": "Test User",
+            "name": "TestUser",
             "email": "user@example.com",
             "password": "password"
         }
@@ -24,7 +24,7 @@ class BusinessTestCase(unittest.TestCase):
 
     def test_register(self):
         response = self.client().post('/register', data=json.dumps(self.user), content_type="application/json")
-        self.assertEquals("User Test User has been registered successfully", str(response.data.decode("utf-8")))
+        self.assertEquals("User TestUser has been registered successfully", str(response.data.decode("utf-8")))
 
     def test_login(self):
         self.client().post('/register', data=json.dumps(self.user), content_type="application/json")

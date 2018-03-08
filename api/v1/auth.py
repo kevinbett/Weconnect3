@@ -35,7 +35,7 @@ def register():
 
     users.append(user)
 
-    return "User %s has been registered successfully"%(name)
+    return "User %s has been registered successfully"%name
 
 @auth.route('/login', methods=["POST"])
 def login():
