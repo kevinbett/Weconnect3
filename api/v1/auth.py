@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from api.v1.validation import check_email, check_password, check_name
 
 auth = Blueprint('auth', __name__)
 
@@ -9,9 +10,17 @@ logged_in_user = None
 
 @auth.route('/register', methods=["POST"])
 def register():
-    name = request.form.get('name')
-    email = request.form.get('email')
-    password = request.form.get('password')
+    requestData = request.get_json()\
+
+    try:
+        name = check_name(requestData.get('name'))
+        email = check_email(requestData.get('email'))
+        password = check_password(requestData.get('password'))
+    except Exception as exception:
+        res = {
+            "message": exception.args
+        }
+        return jsonify(res), 500
 
     if not name or not email or not password:
         return "You need to fill in the name, email and password"
@@ -30,8 +39,9 @@ def register():
 
 @auth.route('/login', methods=["POST"])
 def login():
-    email = request.form.get('email')
-    password = request.form.get('password')
+    requestData = request.get_json()
+    email = requestData.get('email')
+    password = requestData.get('password')
 
     if not email or not password:
         return "You have not filled in either the email or password"
