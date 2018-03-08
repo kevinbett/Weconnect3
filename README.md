@@ -54,9 +54,11 @@ GET  /api/businesses/<businessId>/reviews | Get all reviews for a business
 3. Proceed to make modifications to your fork.
 4. Send pull request from your fork's branch to my master branch.
 
-# Guidelines 
+# Guidelines | How to run the app and tests
 
-Make use of clear commenting for readerbilty accross the board and quick understanding for new contributions to be accepted. 
+- Install flask and create a virtual environment. 
+- Run flask run to execute the server 
+- To test the application, install nosetests and run from the root directory.
 
 # Author 
 
