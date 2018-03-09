@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/kevinbett/WeConnect.svg?branch=v3)](https://travis-ci.org/kevinbett/WeConnect)
 
+[![Coverage Status](https://coveralls.io/repos/github/kevinbett/WeConnect/badge.svg?branch=master)](https://coveralls.io/github/kevinbett/WeConnect?branch=master)
+
 # WeConnect
 
 WeConnect provides a platform that brings businesses and individuals together. This platform creates awareness for businesses and gives the users the ability to write reviews about the businesses they have interacted with. 
