@@ -30,14 +30,9 @@ def register():
     }
 
     users.append(user)
-<<<<<<< HEAD
     return response_message(
         "User %s has been registered successfully"%(name),
         status_code=200)
-=======
-
-    return "User %s has been registered successfully"%name
->>>>>>> aa849ff095734cbb9ed00f0a88a805f68297854c
 
 @auth.route('/login', methods=["POST"])
 def login():
@@ -70,4 +65,5 @@ def login():
 def logout():
     global logged_in_user
     logged_in_user = None
+
 
