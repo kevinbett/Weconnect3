@@ -1,4 +1,6 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request
+
+from api.global_functions import response_message
 from api.v1.validation import check_email, check_password, check_name
 
 auth = Blueprint('auth', __name__)
@@ -10,20 +12,14 @@ logged_in_user = None
 
 @auth.route('/register', methods=["POST"])
 def register():
-    requestData = request.get_json()\
+    requestData = request.get_json()
 
     try:
         name = check_name(requestData.get('name'))
         email = check_email(requestData.get('email'))
         password = check_password(requestData.get('password'))
     except Exception as exception:
-        res = {
-            "message": exception.args
-        }
-        return jsonify(res), 500
-
-    if not name or not email or not password:
-        return "You need to fill in the name, email and password"
+        return response_message(exception.args, status_code=500)
 
     last_user_id = users[len(users) - 1]["id"] if len(users) > 0 else 0
     user = {
@@ -34,27 +30,41 @@ def register():
     }
 
     users.append(user)
+<<<<<<< HEAD
+    return response_message(
+        "User %s has been registered successfully"%(name),
+        status_code=200)
+=======
 
     return "User %s has been registered successfully"%name
+>>>>>>> aa849ff095734cbb9ed00f0a88a805f68297854c
 
 @auth.route('/login', methods=["POST"])
 def login():
     requestData = request.get_json()
-    email = requestData.get('email')
-    password = requestData.get('password')
 
-    if not email or not password:
-        return "You have not filled in either the email or password"
+    try:
+        email = check_email(requestData.get('email'))
+        password = check_password(requestData.get('password'))
+    except Exception as exception:
+        return response_message(exception.args, status_code=500)
+
     if len(users) <= 0:
-        return "You are not registered. Please register before logged in"
+        return response_message(
+            "You are not registered. Please register before logging in",
+            status_code=400)
 
     for user in users:
         if user["email"] == email and user["password"] == password:
             global logged_in_user
             logged_in_user = user
-            return "You are now logged in"
+            return response_message(
+                "You are now logged in as %s"%(user["name"]),
+                status_code=200)
 
-    return "Check Username or password"
+    return response_message(
+        "The user name or password provided is wrong",
+        status_code=400)
 
 @auth.route('/logout', methods=["POST"])
 def logout():

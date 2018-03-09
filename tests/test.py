@@ -1,7 +1,7 @@
 import unittest
 from flask import json
 from api import create_app
-from api.v1 import auth, business
+from api.v1 import auth
 
 class BusinessTestCase(unittest.TestCase):
 
@@ -10,7 +10,11 @@ class BusinessTestCase(unittest.TestCase):
         self.client = self.api.test_client
         self.user = {
             "id": 1,
+<<<<<<< HEAD
+            "name": "test_user",
+=======
             "name": "TestUser",
+>>>>>>> aa849ff095734cbb9ed00f0a88a805f68297854c
             "email": "user@example.com",
             "password": "password"
         }
@@ -24,19 +28,23 @@ class BusinessTestCase(unittest.TestCase):
 
     def test_register(self):
         response = self.client().post('/register', data=json.dumps(self.user), content_type="application/json")
+<<<<<<< HEAD
+        self.assertEquals("User test_user has been registered successfully", json.loads(response.data)["message"])
+=======
         self.assertEquals("User TestUser has been registered successfully", str(response.data.decode("utf-8")))
+>>>>>>> aa849ff095734cbb9ed00f0a88a805f68297854c
 
     def test_login(self):
         self.client().post('/register', data=json.dumps(self.user), content_type="application/json")
         response = self.client().post('/login', data=json.dumps(self.user), content_type="application/json")
-        self.assertEquals("You are now logged in", str(response.data.decode("utf-8")))
+        self.assertEquals("You are now logged in as test_user", json.loads(response.data)["message"])
 
     def test_empty_login_details(self):
         self.client().post('/register', data=json.dumps(self.user), content_type="application/json")
         user = self.user
         user["password"] = ""
         response = self.client().post('login', data=json.dumps(user), content_type="application/json")
-        self.assertEquals("You have not filled in either the email or password", str(response.data.decode("utf-8")))
+        self.assertEquals(["Your password should have atleast 6 characters"], json.loads(response.data)["message"])
 
     def test_invalid_login_details(self):
         self.client().post('/register', data=json.dumps(self.user), content_type="application/json")
@@ -45,7 +53,7 @@ class BusinessTestCase(unittest.TestCase):
             "password": "wrongpassword"
         }
         response = self.client().post('login', data=json.dumps(user), content_type="application/json")
-        self.assertEquals("Check Username or password", str(response.data.decode("utf-8")))
+        self.assertEquals("The user name or password provided is wrong", json.loads(response.data)["message"])
 
     def test_register_business(self):
         self.client().post('/register', data=json.dumps(self.user), content_type="application/json")
@@ -53,7 +61,7 @@ class BusinessTestCase(unittest.TestCase):
         response = self.client().post('/api/v1/businesses/',
                                       data=json.dumps(self.business),
                                       content_type="application/json")
-        self.assertEquals("Business has been registered successfully", str(response.data.decode("utf-8")))
+        self.assertEquals("Business has been registered successfully", json.loads(response.data)["message"])
 
     def test_update_business(self):
         self.client().post('/register', data=json.dumps(self.user), content_type="application/json")
@@ -64,7 +72,7 @@ class BusinessTestCase(unittest.TestCase):
         response = self.client().put("/api/v1/businesses/1",
                                       data=json.dumps(self.business),
                                       content_type="application/json")
-        self.assertEquals("Business has been successfully edited", str(response.data.decode("utf-8")))
+        self.assertEquals("Business has been successfully edited", json.loads(response.data)["message"])
 
     def test_delete_business(self):
         self.client().post('/register', data=json.dumps(self.user), content_type="application/json")
@@ -73,17 +81,19 @@ class BusinessTestCase(unittest.TestCase):
                                       data=json.dumps(self.business),
                                       content_type="application/json")
         response = self.client().delete("/api/v1/businesses/1")
-        self.assertEquals("Business has been successfully deleted", str(response.data.decode("utf-8")))
+        self.assertEquals("Business has been successfully deleted", json.loads(response.data)["message"])
 
     def test_cannot_get_business(self):
         self.client().post('/register', data=json.dumps(self.user), content_type="application/json")
         self.client().post('/login', data=json.dumps(self.user), content_type="application/json")
         response = self.client().get("/api/v1/businesses/29")
-        self.assertEquals("The business you entered does not exist", str(response.data.decode('utf-8')))
+        self.assertEquals("The business you requested does not exist", json.loads(response.data)["message"])
+        self.assertEquals(response.status_code, 404)
 
     def test_can_get_business(self):
         self.client().post('/register', data=json.dumps(self.user), content_type="application/json")
         self.client().post('/login', data=json.dumps(self.user), content_type="application/json")
+        self.client().post('/api/v1/businesses/', data=json.dumps(self.business), content_type="application/json")
         response = self.client().get("/api/v1/businesses/1")
         self.assertEquals(response.status_code, 200)
 
@@ -92,8 +102,3 @@ class BusinessTestCase(unittest.TestCase):
         self.client().post('/login', data=json.dumps(self.user), content_type="application/json")
         response = self.client().get('/api/v1/businesses/')
         self.assertEquals(response.status_code, 200)
-
-
-
-
-
