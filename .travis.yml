@@ -13,4 +13,3 @@ branches:
   - ft-add-review-fuctionality-#155832275
 after_success:
   - coveralls
-  
