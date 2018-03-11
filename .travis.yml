@@ -1,11 +1,16 @@
 language: python
 python:
   - "3.6"
+# install dependencies
 install:
-  - pip3 install -r requirements.txt
-  - pip3 install coveralls
-
+  - "pip install -r requirements.txt"
+  - "pip install coveralls"
+# run tests
 script:
   - nosetests --with-coverage
-after sucess:
+branches:
+  only:
+  - ft-add-review-fuctionality-#155832275
+after_success:
   - coveralls
+  
