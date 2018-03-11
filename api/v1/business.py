@@ -6,6 +6,7 @@ from api.global_functions import response_message
 
 business_blueprint = Blueprint("business", __name__, url_prefix='/api/v1/businesses')
 businesses = []
+reviews = []
 
 @business_blueprint.route('/', methods=["POST"])
 def register_business():
@@ -76,6 +77,26 @@ def get_businesses(businessId):
     else:
         return response_message("The business you requested does not exist", status_code=404)
 
-@business_blueprint.route("/<businessId>/reviews", methods=["PUT"])
-def add_review(businessId):
-    if business['id'] == int(businessId) and business['user_id'] == auth.logged_in_user['id']:
+@business_blueprint.route("/<businessId>/reviews", methods=["POST"])
+def add_review(self, business_id):
+    requestData = request.get_json()
+    try:
+        name = check_name(requestData.get('name'))
+        type = check_name(requestData.get("type"))
+    except Exception as exception:
+        return response_message(exception.args, status_code=200)
+
+    for business in self.businesses:
+        if business['business_id'] == business_id:
+
+    return {'message': 'Check name of business'}
+
+@business_blueprint.route("/<businessId>/reviews", methods=["GET"])
+def view_reviews(self, business_id):
+        for business in self.businesses:
+            if business['business_id'] == business_id:
+                for review in self.reviews:
+                    if review['business_id'] == business_id:
+                        return review
+                return {'message': 'No reviews'}
+
