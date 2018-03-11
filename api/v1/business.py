@@ -75,3 +75,7 @@ def get_businesses(businessId):
             return jsonify(business)
     else:
         return response_message("The business you requested does not exist", status_code=404)
+
+@business_blueprint.route("/<businessId>/reviews", methods=["PUT"])
+def add_review(businessId):
+    if business['id'] == int(businessId) and business['user_id'] == auth.logged_in_user['id']:
