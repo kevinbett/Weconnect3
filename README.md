@@ -2,7 +2,6 @@
 [![Coverage Status](https://coveralls.io/repos/github/kevinbett/WeConnect/badge.svg?branch=master)](https://coveralls.io/github/kevinbett/WeConnect?branch=master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/057f3e0d62744341bb612426211c460c)](https://www.codacy.com/app/kevinbett/WeConnect?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=kevinbett/WeConnect&amp;utm_campaign=Badge_Grade)
 
-
 # WeConnect
 
 WeConnect provides a platform that brings businesses and individuals together. This platform creates awareness for businesses and gives the users the ability to write reviews about the businesses they have interacted with. 
