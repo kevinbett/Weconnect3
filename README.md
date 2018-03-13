@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/kevinbett/WeConnect.svg?branch=v3)](https://travis-ci.org/kevinbett/WeConnect)
-
 [![Coverage Status](https://coveralls.io/repos/github/kevinbett/WeConnect/badge.svg?branch=master)](https://coveralls.io/github/kevinbett/WeConnect?branch=master)
 
 # WeConnect
