@@ -82,7 +82,7 @@ def add_review(businessId, review):
     requestData = request.get_json()
 
     if not auth.logged_in_user:
-        return response_message("You must be logged in to register business", 401)
+        return response_message("You must be logged in to review a business", 401)
 
     reviews = {
         "user_id": auth.logged_in_user["id"],
