@@ -78,25 +78,28 @@ def get_businesses(businessId):
         return response_message("The business you requested does not exist", status_code=404)
 
 @business_blueprint.route("/<businessId>/reviews", methods=["POST"])
-def add_review(self, business_id):
+def add_review(businessId, review):
     requestData = request.get_json()
-    try:
-        name = check_name(requestData.get('name'))
-        type = check_name(requestData.get("type"))
-    except Exception as exception:
-        return response_message(exception.args, status_code=200)
 
-    for business in self.businesses:
-        if business['business_id'] == business_id:
+    if not auth.logged_in_user:
+        return response_message("You must be logged in to register business", 401)
 
-    return {'message': 'Check name of business'}
+    reviews = {
+        "user_id": auth.logged_in_user["id"],
+        "review": review
+    }
+    reviews.append(review)
+
+    return response_message("Your review has been posted", 201)
 
 @business_blueprint.route("/<businessId>/reviews", methods=["GET"])
-def view_reviews(self, business_id):
-        for business in self.businesses:
-            if business['business_id'] == business_id:
-                for review in self.reviews:
-                    if review['business_id'] == business_id:
-                        return review
-                return {'message': 'No reviews'}
+def view_reviews():
+    res = {
+        "reviews": reviews
+    }
+    return jsonify(res), 200
+
+
+
+
 
