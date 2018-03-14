@@ -98,8 +98,3 @@ def view_reviews():
         "reviews": reviews
     }
     return jsonify(res), 200
-
-
-
-
-
