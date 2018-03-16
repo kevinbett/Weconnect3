@@ -1,4 +1,5 @@
-'''Imports'''
+#Imports
+
 from flask import Blueprint, request, jsonify
 from api.v1 import auth
 from api.v1.validation import check_name
@@ -7,6 +8,7 @@ from api.global_functions import response_message
 business_blueprint = Blueprint("business", __name__, url_prefix='/api/v1/businesses')
 businesses = []
 reviews = []
+
 
 @business_blueprint.route('/', methods=["POST"])
 def register_business():
@@ -33,12 +35,14 @@ def register_business():
 
     return response_message("Business has been registered successfully", 201)
 
+
 @business_blueprint.route('/', methods=["GET"])
 def view_businesses():
     res = {
         "businesses": businesses
     }
     return jsonify(res), 200
+
 
 @business_blueprint.route("/<businessId>", methods=["PUT"])
 def update_business(businessId):
@@ -57,6 +61,7 @@ def update_business(businessId):
                 business["type"] = type
             return response_message("Business has been successfully edited", status_code=201)
     return response_message("The business you requested does not exist", status_code=404)
+
 
 @business_blueprint.route("/<businessId>", methods=["DELETE"])
 def delete_business(businessId):
@@ -77,24 +82,28 @@ def get_businesses(businessId):
     else:
         return response_message("The business you requested does not exist", status_code=404)
 
+
 @business_blueprint.route("/<businessId>/reviews", methods=["POST"])
-def add_review(businessId, review):
+def add_review(businessId):
     requestData = request.get_json()
 
     if not auth.logged_in_user:
         return response_message("You must be logged in to review a business", 401)
 
-    reviews = {
+    review = {
         "user_id": auth.logged_in_user["id"],
-        "review": review
+        "reviews": reviews
     }
     reviews.append(review)
 
     return response_message("Your review has been posted", 201)
+
 
 @business_blueprint.route("/<businessId>/reviews", methods=["GET"])
 def view_reviews():
     res = {
         "reviews": reviews
     }
-    return jsonify(res), 200
+    return jsonify(res)
+
+
