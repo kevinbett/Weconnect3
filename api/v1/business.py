@@ -87,12 +87,18 @@ def get_businesses(businessId):
 def add_review(businessId):
     requestData = request.get_json()
 
+    try:
+        feedback = check_name(requestData.get('feedback'))
+    except Exception as exception:
+        return response_message(exception.args, status_code=200)
+
     if not auth.logged_in_user:
         return response_message("You must be logged in to review a business", 401)
 
     review = {
         "user_id": auth.logged_in_user["id"],
-        "reviews": reviews
+        "businessId": businessId,
+        "feedback": feedback
     }
     reviews.append(review)
 
@@ -100,10 +106,16 @@ def add_review(businessId):
 
 
 @business_blueprint.route("/<businessId>/reviews", methods=["GET"])
-def view_reviews():
+def view_reviews(businessId):
+    res_reviews = []
+    if not auth.logged_in_user:
+        return response_message("You must be logged in to review a business", 401)
+
+    for review in reviews:
+        if review["businessId"] == int(businessId):
+            res_reviews.append(review)
+
     res = {
-        "reviews": reviews
+        "reviews": res_reviews
     }
     return jsonify(res)
-
-

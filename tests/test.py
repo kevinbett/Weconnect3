@@ -19,6 +19,9 @@ class BusinessTestCase(unittest.TestCase):
             "name": "Andela",
             "type": "Mentorship"
         }
+        self.review = {
+            "feedback": "feedback"
+        }
 
     def tearDown(self):
         auth.logout()
@@ -99,16 +102,16 @@ class BusinessTestCase(unittest.TestCase):
     def test_add_review(self):
         self.client().post('/register', data=json.dumps(self.user), content_type="application/json")
         self.client().post('/login', data=json.dumps(self.user), content_type="application/json")
-        self.client().post('/api/businesses/<businessId>/reviews', data=json.dumps(self.user), content_type="application/json")
-        response = self.client().post('/api/v1/businesses/<businessId>/reviews',
-                                      data=json.dumps(self.business),
+        self.client().post('/api/v1/businesses/1/reviews', data=json.dumps(self.user), content_type="application/json")
+        response = self.client().post('/api/v1/businesses/1/reviews',
+                                      data=json.dumps(self.review),
                                       content_type="application/json")
         self.assertEquals("Your review has been posted", json.loads(response.data)["message"])
 
     def test_view_reviews(self):
         self.client().post('/register', data=json.dumps(self.user), content_type="application/json")
         self.client().post('/login', data=json.dumps(self.user), content_type="application/json")
-        response = self.client().get('/api/businesses/<businessId>/reviews')
+        response = self.client().get('/api/v1/businesses/1/reviews')
         self.assertEquals(response.status_code, 200)
 
         

@@ -65,5 +65,3 @@ def login():
 def logout():
     global logged_in_user
     logged_in_user = None
-
-
