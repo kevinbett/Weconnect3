@@ -49,8 +49,8 @@ class Review(db.Model):
 
     __tablename__ = "reviews"
 
-    id = db.Column(db.integer, primary_key=True)
-    feedback = db.column(db.string, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    feedback = db.Column(db.String, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     business_id = db.Column(db.Integer, db.ForeignKey("businesses.id"))
 
