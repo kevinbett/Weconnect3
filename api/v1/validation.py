@@ -1,9 +1,9 @@
 import re
 
-def check_name(username):
-    if not re.match("^[a-zA-Z0-9_]*$", username):
-        raise Exception("You have entered an invalid username")
-    return username
+def check_name(name):
+    if not re.match("^[a-zA-Z0-9_ ]*$", name):
+        raise Exception("You have entered an invalid name")
+    return name
 
 def check_password(password):
     if len(password) < 6:
