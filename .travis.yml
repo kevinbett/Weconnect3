@@ -10,6 +10,6 @@ script:
   - nosetests --with-coverage
 branches:
   only:
-  - ft-add-review-fuctionality-#155832275
+  - master
 after_success:
   - coveralls
