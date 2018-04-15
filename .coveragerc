@@ -1,31 +1,26 @@
 [report]
 omit =
-    *asyncio*
-    *concurrent*
-    *ctypes*
-    *decimal.py*
-    *html\*
-    *mimetypes.py*
-    *multiprocessing\*
-    *numbers.py*
-    *stringprep*
-    *uuid.py*
-    *api\*
-    *instance\*
-    *encodings\*
-    *mac*
-    *click*
-    *colorama\*
-    *flask\*
-    *itsdangerous.py*
-    *jinja2\*
-    *markupsafe\*
-    *werkzeug\*
-    *http\cookiejar.py*
-
-
-
-
-
-
-
+	  	*/venv*
+		*/ctypes*
+		*/html*
+		*crypt.py*
+		*decimal.py*
+		*/encodings*
+		*hmac.py*
+		*mimetypes.py*
+		*stringprep.py*
+		*uuid.py*
+		*/http*
+		*numbers.py*
+		*click/*
+  		*flask/*
+  		*itsdangerous.py*
+  		*jinja2/*
+  		*markupsafe/*
+  		*werkzeug/*
+  		*flask_jsonpify.py*
+		*jwt/*
+		*passlib/*
+		*virtualenv/*
+		*email/*
+		*smtplib.py*
