@@ -1,8 +1,8 @@
-#Imports
+# Imports
 
 from flask import Blueprint, request, jsonify
 from api.v1 import auth
-from api.v1.validation import check_name
+from api.v1.validation import check_name, check_review
 from api.global_functions import response_message
 
 business_blueprint = Blueprint("business", __name__, url_prefix='/api/v1/businesses')
@@ -51,7 +51,7 @@ def update_business(businessId):
         name = check_name(requestData.get('name'))
         type = check_name(requestData.get("type"))
     except Exception as exception:
-        return response_message(exception.args, status_code=500)
+        return response_message(exception.args, status_code=201)
 
     for business in businesses:
         if business["id"] == int(businessId) and business["user_id"] == auth.logged_in_user["id"]:
@@ -68,7 +68,11 @@ def delete_business(businessId):
     global businesses
     for business in businesses:
         if business["id"] == int(businessId) and business["user_id"] == auth.logged_in_user["id"]:
-            businesses = [business for business in businesses if business["id"] != businessId]
+            for business in businesses:
+                if business["id"] == businessId:
+                    del business
+                    break
+
             return response_message("Business has been successfully deleted", status_code=200)
     return response_message("The business you requested does not exist", status_code=404)
 
@@ -88,7 +92,7 @@ def add_review(businessId):
     requestData = request.get_json()
 
     try:
-        feedback = check_name(requestData.get('feedback'))
+        feedback = check_review(requestData.get('feedback'))
     except Exception as exception:
         return response_message(exception.args, status_code=200)
 
@@ -107,15 +111,11 @@ def add_review(businessId):
 
 @business_blueprint.route("/<businessId>/reviews", methods=["GET"])
 def view_reviews(businessId):
-    res_reviews = []
     if not auth.logged_in_user:
-        return response_message("You must be logged in to review a business", 401)
+        return response_message("You must be logged in to view reviews", 401)
 
     for review in reviews:
-        if review["businessId"] == int(businessId):
-            res_reviews.append(review)
-
-    res = {
-        "reviews": res_reviews
-    }
-    return jsonify(res)
+        if review["businessId"] == businessId and review["user_id"] == auth.logged_in_user["id"]:
+            return jsonify(review)
+    else:
+        return response_message("This business has no review yet", status_code=404)

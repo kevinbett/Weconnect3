@@ -10,6 +10,7 @@ logged_in_user = None
 
 '''Implementing Register, login and user'''
 
+
 @auth.route('/register', methods=["POST"])
 def register():
     requestData = request.get_json()
@@ -31,8 +32,9 @@ def register():
 
     users.append(user)
     return response_message(
-        "User %s has been registered successfully"%(name),
+        "User %s has been registered successfully" % (name),
         status_code=200)
+
 
 @auth.route('/login', methods=["POST"])
 def login():
@@ -54,16 +56,16 @@ def login():
             global logged_in_user
             logged_in_user = user
             return response_message(
-                "You are now logged in as %s"%(user["name"]),
+                "You are now logged in as %s" % (user["name"]),
                 status_code=200)
 
     return response_message(
         "The user name or password provided is wrong",
         status_code=400)
 
+
 @auth.route('/logout', methods=["POST"])
 def logout():
     global logged_in_user
     logged_in_user = None
     return "user has been logged out"
-
