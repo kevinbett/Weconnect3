@@ -65,10 +65,11 @@ class BusinessTestCase(unittest.TestCase):
         self.client().post('/api/v1/businesses/',
                                       data=json.dumps(self.business),
                                       content_type="application/json")
-        response = self.client().put("/api/v1/businesses/1",
+        response = self.client().put("/api/v1/businesses/2",
                                       data=json.dumps(self.business),
                                       content_type="application/json")
         self.assertEquals("Business has been successfully edited", json.loads(response.data)["message"])
+
 
     def test_delete_business(self):
         self.client().post('/register', data=json.dumps(self.user), content_type="application/json")
