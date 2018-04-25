@@ -1,10 +1,5 @@
 import re
 
-'''def check_name(name):
-    if not re.match("^[a-zA-Z0-9_]*$", name):
-        raise Exception("You have entered an invalid name")
-    return name'''
-
 
 def check_name(name):
     if re.match("^$", name.strip()):
@@ -29,15 +24,6 @@ def check_review(review):
     if re.match("^$", review.strip()):
         raise Exception("You have entered an invalid review")
     return review
-
-
-'''def check_business(name):
-    name = name.split()
-    match = ' '.join(name)
-    if not match:
-        raise Exception("Business name or type cannot be blank")
-    else:
-        return name'''
 
 
 def check_business(name):
