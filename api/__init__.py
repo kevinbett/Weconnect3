@@ -7,7 +7,6 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
-
 def create_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
     app.register_blueprint(auth_blueprint)
@@ -16,3 +15,4 @@ def create_app(config_name):
     app.config.from_pyfile('config.py')
     db.init_app(app)
     return app
+
