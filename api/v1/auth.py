@@ -19,8 +19,14 @@ def register():
         name = check_name(requestData.get('name'))
         email = check_email(requestData.get('email'))
         password = check_password(requestData.get('password'))
+
     except Exception as exception:
         return response_message(exception.args, status_code=500)
+
+    for user in users:
+        if user["email"] == email:
+
+            return response_message("email is already in use", status_code=400)
 
     last_user_id = users[len(users) - 1]["id"] if len(users) > 0 else 0
     user = {
@@ -31,9 +37,8 @@ def register():
     }
 
     users.append(user)
-    return response_message(
-        "User %s has been registered successfully" % (name),
-        status_code=200)
+
+    return response_message("User %s has been registered successfully" % (name),status_code=200)
 
 
 @auth.route('/login', methods=["POST"])
