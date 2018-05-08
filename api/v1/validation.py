@@ -31,3 +31,14 @@ def check_business(name):
         raise Exception("Business name or type cannot be blank")
     else:
         return name
+
+def check_update(name):
+    try:
+        if re.match("^$", name.strip()):
+            raise Exception("Field cannot be empty")
+        else:
+            return name
+
+    except AttributeError:
+        return ""
+
