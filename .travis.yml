@@ -10,6 +10,6 @@ script:
   - nosetests --with-coverage
 branches:
   only:
-  - master
+  - feature
 after_success:
   - coveralls
