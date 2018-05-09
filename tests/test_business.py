@@ -53,5 +53,9 @@ class BusinessTestCase(BaseTestCase):
     def test_retrieve_all_businesses(self):
         self.client().post('/register', data=json.dumps(self.user), content_type="application/json")
         self.client().post('/login', data=json.dumps(self.user), content_type="application/json")
+        self.client().post('/api/v1/businesses/', data=json.dumps(self.business), content_type="application/json")
+        self.business['name'] = 'Bett'
+        self.client().post('/api/v1/businesses/', data=json.dumps(self.business), content_type="application/json")
         response = self.client().get('/api/v1/businesses/')
         self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(json.loads(response.data)['businesses']), 2)
