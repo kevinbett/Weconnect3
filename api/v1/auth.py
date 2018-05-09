@@ -68,9 +68,30 @@ def login():
         "The user name or password provided is wrong",
         status_code=400)
 
+@auth.route('/reset-password', methods=['POST'])
+def reset_password():
+    requestData = request.get_json()
+    global logged_in_user
+    if logged_in_user is None:
+        return response_message("Please login", status_code=401)
+    try:
+        new_password = check_password(requestData.get('new_password'))
+        old_password = check_password(requestData.get('old_password'))
+    except Exception:
+        return response_message("Enter a valid password", status_code=400)
+
+    if logged_in_user["password"] != old_password:
+        return response_message("Please input your oldpassword", status_code=401)
+
+    logged_in_user["password"] = new_password
+
+    return response_message("Password has been successfully changed", status_code=200)
+
 
 @auth.route('/logout', methods=["POST"])
 def logout():
     global logged_in_user
     logged_in_user = None
     return "user has been logged out"
+
+
