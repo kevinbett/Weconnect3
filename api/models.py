@@ -32,7 +32,10 @@ class Business(db.Model):
     name = db.Column(db.String(255), nullable=False)
     type = db.Column(db.String(255), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    location = db.Column(db.String(255), nullable=False)
+    category = db.Column(db.String(255), nullable=False)
     reviews = db.relationship("Review")
+
 
     def __init__(self, name, type):
         self.name = name
