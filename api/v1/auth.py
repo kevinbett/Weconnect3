@@ -1,5 +1,5 @@
-from flask import Blueprint, request
-
+from flask import Blueprint, request, jsonify
+from api.models import User
 from api.global_functions import response_message
 from api.v1.validation import check_email, check_password, check_name
 
@@ -23,20 +23,14 @@ def register():
     except Exception as exception:
         return response_message(exception.args, status_code=500)
 
-    for user in users:
-        if user["email"] == email:
+#Check if email is already used
+    user = User.query.filter_by(email=email).first()
+    if user:
 
             return response_message("email is already in use", status_code=400)
+    user = User(name, email, password)
+    user.save()
 
-    last_user_id = users[len(users) - 1]["id"] if len(users) > 0 else 0
-    user = {
-        "id": last_user_id + 1,
-        "name": name,
-        "email": email,
-        "password": password
-    }
-
-    users.append(user)
 
     return response_message("User %s has been registered successfully" % (name),status_code=200)
 
@@ -51,22 +45,20 @@ def login():
     except Exception as exception:
         return response_message(exception.args, status_code=500)
 
-    if len(users) <= 0:
-        return response_message(
-            "You are not registered. Please register before logging in",
-            status_code=400)
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return response_message("You are not registered. Please register before logging in", status_code=400)
 
-    for user in users:
-        if user["email"] == email and user["password"] == password:
-            global logged_in_user
-            logged_in_user = user
-            return response_message(
-                "You are now logged in as %s" % (user["name"]),
-                status_code=200)
+    if not user.is_correct_password(password):
+        return response_message("The email or password provided is wrong", status_code=401)
 
-    return response_message(
-        "The user name or password provided is wrong",
-        status_code=400)
+    auth_token = user.encode_auth_token(user.id)
+    if auth_token:
+        res = {
+            "message": "You are now logged in as {}".format(user.name),
+            "auth_token": auth_token.decode()
+        }
+        return jsonify(res), 200
 
 @auth.route('/reset-password', methods=['POST'])
 def reset_password():
