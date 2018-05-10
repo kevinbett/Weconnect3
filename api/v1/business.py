@@ -1,9 +1,12 @@
 # Imports
 
 from flask import Blueprint, request, jsonify
+from sqlalchemy.exc import IntegrityError
 from api.v1 import auth
 from api.v1.validation import check_name, check_review, check_business, check_update
-from api.global_functions import response_message
+from api.global_functions import response_message, get_user
+from api.models import Business, User
+
 
 business_blueprint = Blueprint("business", __name__, url_prefix='/api/v1/businesses')
 businesses = []
@@ -22,34 +25,37 @@ def register_business():
     except Exception as exception:
         return response_message(exception.args, status_code=200)
 
-    if not auth.logged_in_user:
-        return response_message("You must be logged in to register business", 401)
+    auth_token = request.headers.get("Authorization")
+    user = get_user(auth_token)
+    if not isinstance(user, User):
+        return response_message(user, 401)
 
-    for business in businesses:
-        if business["name"] == name:
-            return response_message("The business name has already been registered", status_code=400)
-
-    last_business_id = businesses[len(businesses) - 1]["id"] if len(businesses) > 0 else 0
-
-    business = {
-        "id": last_business_id + 1,
-        "user_id": auth.logged_in_user["id"],
-        "name": name,
-        "type": type,
-        "location": location,
-        "category": category
-    }
-    businesses.append(business)
-
-    return response_message("Business has been registered successfully", 201)
+    try:
+        business = Business(name, type, location, category)
+        business.user_id = user.id
+        business.save()
+        return response_message("Business has been registered successfully", 201)
+    except IntegrityError:
+        return response_message("Duplicate business name", 400)
 
 
 @business_blueprint.route('/', methods=["GET"])
 def view_businesses():
-    res = {
-        "businesses": businesses
+    businessQuery = Business.query.all()
+    businesses = [
+        {
+            "name" : business.name,
+            "type" : business.type,
+            "category": business.category,
+            "id" : business.id,
+            "location": business.location
+        } for business in businessQuery
+    ]
+    response = {
+        "businesses": list(businesses)
     }
-    return jsonify(res), 200
+
+    return jsonify(response)
 
 @business_blueprint.route("/<businessId>", methods=["PUT"])
 def update_business(businessId):
@@ -62,26 +68,26 @@ def update_business(businessId):
     except Exception as exception:
         return response_message(exception.args, status_code=201)
 
-    business = [business for business in businesses if business["id"] == int(businessId)]
-    if len(business) <= 0:
+    auth_token = request.headers.get("Authorization")
+    user = get_user(auth_token)
+    if not isinstance(user, User):
+        return response_message(user, 401)
+
+    business = user.businesses.filter_by(id=id).first()
+
+    if not business:
         return response_message("The business you requested does not exist", status_code=404)
 
-    business = business[0]
-    if business["user_id"] == auth.logged_in_user["id"]:
-        if len(name) > 0:
-            business["name"] = name
-        if len(type) > 0:
-            business["type"] = type
-        if len(location) > 0:
-            business["location"] = location
-        if len(category) > 0:
-            business["category"] = category
+    if len(name) > 0:
+        business.name = name
+    if len(type) > 0:
+        business.type = type
+    if len(location) > 0:
+        business.location = location
+    if len(category) > 0:
+        business.category = category
 
-        return response_message("Business has been successfully edited", status_code=201)
-
-    return response_message("You are not authorized to update", status_code=401)
-
-
+    return response_message("Business has been successfully edited", status_code=201)
 
 @business_blueprint.route("/<businessId>", methods=["DELETE"])
 def delete_business(businessId):
