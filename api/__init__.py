@@ -2,12 +2,8 @@ from flask import Flask
 from instance.config import app_config
 from api.v1.auth import auth as auth_blueprint
 from api.v1.business import business_blueprint
-from flask_sqlalchemy import SQLAlchemy
 from api.global_functions import response_message
-
-
-db = SQLAlchemy()
-
+from api.models import db
 
 def create_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
@@ -29,7 +25,9 @@ def create_app(config_name):
     def bad_request(e):
         return response_message("Bad request", 400)
 
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        return response_message("Internal server error", 500)
+
     return app
-
-
 
