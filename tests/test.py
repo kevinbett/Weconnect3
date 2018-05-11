@@ -1,14 +1,15 @@
 import unittest
-from flask import json
 from api import create_app
-from api.v1 import auth
-
-
+from api.models import db
 class BaseTestCase(unittest.TestCase):
 
     def setUp(self):
         self.api = create_app("testing")
         self.client = self.api.test_client
+        app_context = self.api.app_context()
+        app_context.push()
+        db.create_all()
+
         self.user = {
             "id": 1,
             "name": "test_user",
@@ -25,7 +26,7 @@ class BaseTestCase(unittest.TestCase):
         }
 
     def tearDown(self):
-        auth.logout()
+        pass
 
 
         
