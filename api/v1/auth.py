@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from api.models import User
-from api.global_functions import response_message
+from api.global_functions import response_message, get_user
 from api.v1.validation import check_email, check_password, check_name
 
 auth = Blueprint('auth', __name__)
@@ -62,28 +62,19 @@ def login():
 
 @auth.route('/reset-password', methods=['POST'])
 def reset_password():
+    auth_token = request.headers.get("Authorization")
+    user = get_user(auth_token)
+    if not isinstance(user, User):
+        return response_message(user, 401)
+
     requestData = request.get_json()
-    global logged_in_user
-    if logged_in_user is None:
-        return response_message("Please login", status_code=401)
     try:
         new_password = check_password(requestData.get('new_password'))
-        old_password = check_password(requestData.get('old_password'))
     except Exception:
         return response_message("Enter a valid password", status_code=400)
 
-    if logged_in_user["password"] != old_password:
-        return response_message("Please input your oldpassword", status_code=401)
+    user.set_password(new_password)
+    user.save()
 
-    logged_in_user["password"] = new_password
-
-    return response_message("Password has been successfully changed", status_code=200)
-
-
-@auth.route('/logout', methods=["POST"])
-def logout():
-    global logged_in_user
-    logged_in_user = None
-    return "user has been logged out"
-
+    return response_message("Password has been succesfully changed", status_code=200)
 
