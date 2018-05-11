@@ -4,8 +4,8 @@ from flask import Blueprint, request, jsonify
 from sqlalchemy.exc import IntegrityError
 from api.v1 import auth
 from api.v1.validation import check_name, check_review, check_business, check_update
-from api.global_functions import response_message, get_user
-from api.models import Business, User
+from api.global_functions import response_message, get_user, format_reviews
+from api.models import Business, User, Review
 
 
 business_blueprint = Blueprint("business", __name__, url_prefix='/api/v1/businesses')
@@ -21,7 +21,7 @@ def register_business():
         name = check_business(requestData.get("name"))
         type = check_business(requestData.get("type"))
         location = check_business(requestData.get("location"))
-        category = check_business(requestData.get("location"))
+        category = check_business(requestData.get("category"))
     except Exception as exception:
         return response_message(exception.args, status_code=200)
 
@@ -73,42 +73,58 @@ def update_business(businessId):
     if not isinstance(user, User):
         return response_message(user, 401)
 
-    business = user.businesses.filter_by(id=id).first()
-
+    business = Business.query.filter_by(id=businessId).first()
     if not business:
-        return response_message("The business you requested does not exist", status_code=404)
+        return response_message("The business you requested does not exist",
+                                status_code=404)
 
-    if len(name) > 0:
-        business.name = name
-    if len(type) > 0:
-        business.type = type
-    if len(location) > 0:
-        business.location = location
-    if len(category) > 0:
-        business.category = category
+    if business.user_id is not user.id:
+        return response_message("You are not authorized to edit this business, status_code=401")
 
-    return response_message("Business has been successfully edited", status_code=201)
+    try:
+        if len(name) > 0:
+            business.name = name
+        if len(type) > 0:
+            business.type = type
+        if len(location) > 0:
+            business.location = location
+        if len(category) > 0:
+            business.category = category
+        business.save()
+
+        return response_message("Business has been successfully edited", status_code=201)
+
+    except IntegrityError:
+        return response_message("Another business has a similar business name")
 
 @business_blueprint.route("/<businessId>", methods=["DELETE"])
 def delete_business(businessId):
-    global businesses
-    for index, business in enumerate(businesses):
-        if business["id"] == int(businessId):
-            if business["user_id"] != auth.logged_in_user["id"]:
-                return response_message("You are not authorised to delete this business", status_code=401)
-            del businesses[index]
-            return response_message("Business has been successfully deleted", status_code=200)
-    return response_message("The business you requested does not exist", status_code=404)
+    auth_token = request.headers.get("Authorization")
+    user = get_user(auth_token)
+    if not isinstance(user, User):
+        return response_message(user, 401)
 
+    business = Business.query.filter_by(id=businessId).first()
+    if not business:
+        return response_message("The business you requested does not exist", status_code=404)
+    business.delete()
+    return response_message( "Business has been deleted successfully", status_code=200 )
 
 @business_blueprint.route("/<businessId>", methods=["GET"])
 def get_businesses(businessId):
-    for business in businesses:
-        if business["id"] == int(businessId): #and business["user_id"] == auth.logged_in_user["id"]:
-            return jsonify(business)
-    else:
+    business = Business.query.filter_by(id=businessId).first()
+    if not business:
         return response_message("The business you requested does not exist", status_code=404)
 
+    business = {
+        "name": business.name,
+        "type": business.type,
+        "category": business.category,
+        "id": business.id,
+        "location": business.location
+    }
+
+    return jsonify(business)
 
 @business_blueprint.route("/<businessId>/reviews", methods=["POST"])
 def add_review(businessId):
@@ -119,31 +135,39 @@ def add_review(businessId):
     except Exception as exception:
         return response_message(exception.args, status_code=200)
 
-    if not auth.logged_in_user:
-        return response_message("You must be logged in to review a business", 401)
+    auth_token = request.headers.get("Authorization")
+    user = get_user(auth_token)
+    if not isinstance(user, User):
+        return response_message(user, 401)
 
-    for business in businesses:
-        if business["id"] == int(businessId):
+    business = Business.query.filter_by(id=businessId).first()
+    if not business:
+        return response_message("The business you requested does not exist", status_code=404)
 
-            review = {
-                "user_id": auth.logged_in_user["id"],
-                "businessId": int(businessId),
-                "feedback": feedback
-            }
-            reviews.append(review)
-
-            return response_message("Your review has been posted", 201)
-
-    return response_message("The business does not exist", status_code=404)
+    review = Review(feedback)
+    review.user_id = user.id
+    review.business_id = business.id
+    review.save()
+    return response_message("Your review has been added", 201)
 
 
 @business_blueprint.route("/<businessId>/reviews", methods=["GET"])
 def view_reviews(businessId):
-    if not auth.logged_in_user:
-        return response_message("You must be logged in to view reviews", 401)
+    business = Business.query.filter_by(id=businessId).first()
+    if not business:
+        return response_message("The business you requested does not exist", status_code=404)
 
-    for review in reviews:
-        if review["businessId"] == int(businessId) and review["user_id"] == auth.logged_in_user["id"]:
-            return jsonify(review)
-    else:
-        return response_message("This business has no review yet", status_code=404)
+    business = {
+        "name": business.name,
+        "type": business.type,
+        "category": business.category,
+        "id": business.id,
+        "location": business.location,
+        "reviews": format_reviews(business.reviews)
+    }
+
+    return jsonify(business)
+
+
+
+
