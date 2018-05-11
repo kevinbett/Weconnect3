@@ -135,11 +135,6 @@ def add_review(businessId):
     except Exception as exception:
         return response_message(exception.args, status_code=200)
 
-    auth_token = request.headers.get("Authorization")
-    user = get_user(auth_token)
-    if not isinstance(user, User):
-        return response_message(user, 401)
-
     business = Business.query.filter_by(id=businessId).first()
     if not business:
         return response_message("The business you requested does not exist", status_code=404)
