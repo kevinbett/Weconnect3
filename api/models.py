@@ -3,15 +3,9 @@ import jwt
 from werkzeug.security import generate_password_hash, check_password_hash
 from instance.config import Config
 import datetime
-from collections import OrderedDict
+
 db = SQLAlchemy()
 
-class DictSerializable(object):
-    def _asdict(self):
-        result = OrderedDict()
-        for key in self.__mapper__.c.keys():
-            result[key] = getattr(self, key)
-        return result
 
 class User(db.Model):
     """This class represents the users table"""
@@ -73,7 +67,7 @@ class User(db.Model):
 
 
 
-class Business(db.Model, DictSerializable):
+class Business(db.Model):
 
 
     """This Class represents Business Table"""
