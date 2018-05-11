@@ -4,11 +4,8 @@ from flask import json
 class AuthTestCase(BaseTestCase):
 
     def test_register(self):
-        self.client().post('/register', data=json.dumps(self.user), content_type="application/json")
-        user = self.user
-        user["email"] = "user@example.com"
         response = self.client().post('/register', data=json.dumps(self.user), content_type="application/json")
-        self.assertEquals("email is already in use", json.loads(response.data)["message"])
+        self.assertEquals("User test_user has been registered successfully", json.loads(response.data)["message"])
 
     def test_login(self):
         self.client().post('/register', data=json.dumps(self.user), content_type="application/json")
@@ -31,4 +28,4 @@ class AuthTestCase(BaseTestCase):
             "password": "wrongpassword"
         }
         response = self.client().post('login', data=json.dumps(user), content_type="application/json")
-        self.assertEquals("The user name or password provided is wrong", json.loads(response.data)["message"])
+        self.assertEquals("The email or password provided is wrong", json.loads(response.data)["message"])

@@ -26,7 +26,8 @@ class BaseTestCase(unittest.TestCase):
         }
 
     def tearDown(self):
-        pass
+        db.session.remove()
+        db.drop_all()
 
 
         
