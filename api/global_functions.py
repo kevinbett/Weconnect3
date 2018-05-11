@@ -24,3 +24,15 @@ def get_user(auth_token):
     return {
         'message':'provide a valid token'
     }
+
+def format_reviews(reviews):
+    formatted_reviews = []
+    for review in reviews:
+        rev = {
+
+            "feedback":review.feedback
+        }
+
+        formatted_reviews.append(rev)
+
+    return formatted_reviews
