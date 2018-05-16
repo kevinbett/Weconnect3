@@ -2,15 +2,12 @@
 
 from flask import Blueprint, request, jsonify
 from sqlalchemy.exc import IntegrityError
-from api.v1 import auth
-from api.v1.validation import check_name, check_review, check_business, check_update
+from api.v1.validation import check_review, check_business, check_update
 from api.global_functions import response_message, get_user, format_reviews
 from api.models import Business, User, Review
 
 
 business_blueprint = Blueprint("business", __name__, url_prefix='/api/v1/businesses')
-businesses = []
-reviews = []
 
 
 @business_blueprint.route('/', methods=["POST"])
@@ -41,7 +38,22 @@ def register_business():
 
 @business_blueprint.route('/', methods=["GET"])
 def view_businesses():
-    businessQuery = Business.query.all()
+    search_query = request.args.get('q', '*')
+    search_category = request.args.get('category', None)
+    search_location = request.args.get('location', None)
+    page = request.args.get('page', 1)
+    limit = request.args.get('limit', 20)
+    filtered_businesses = Business
+
+    if search_query:
+        filtered_businesses = filtered_businesses.query.filter_by(name=search_query)
+    if search_category:
+        filtered_businesses = filtered_businesses.filter_by(category = search_category)
+    if search_location:
+        filtered_businesses = filtered_businesses.filter_by(location = search_location)
+
+    filtered_businesses = filtered_businesses.paginate(page, limit)
+
     businesses = [
         {
             "name" : business.name,
@@ -49,7 +61,7 @@ def view_businesses():
             "category": business.category,
             "id" : business.id,
             "location": business.location
-        } for business in businessQuery
+        } for business in filtered_businesses.items
     ]
     response = {
         "businesses": list(businesses)
@@ -66,7 +78,7 @@ def update_business(businessId):
         location = check_update(requestData.get("location"))
         category = check_update(requestData.get("category"))
     except Exception as exception:
-        return response_message(exception.args, status_code=201)
+        return response_message(exception.args, status_code=500)
 
     auth_token = request.headers.get("Authorization")
     user = get_user(auth_token)
@@ -77,9 +89,11 @@ def update_business(businessId):
     if not business:
         return response_message("The business you requested does not exist",
                                 status_code=404)
+    if business.name == name:
+        return response_message("The entry/field you are trying to update is a duplicate", status_code=400)
 
     if business.user_id is not user.id:
-        return response_message("You are not authorized to edit this business, status_code=401")
+        return response_message("You are not authorized to edit this business", status_code=401)
 
     try:
         if len(name) > 0:
@@ -107,6 +121,10 @@ def delete_business(businessId):
     business = Business.query.filter_by(id=businessId).first()
     if not business:
         return response_message("The business you requested does not exist", status_code=404)
+
+    if user.id != business.user_id:
+        return response_message("You are not authorised to delete this business!", status_code=401)
+
     business.delete()
     return response_message( "Business has been deleted successfully", status_code=200 )
 
@@ -133,7 +151,7 @@ def add_review(businessId):
     try:
         feedback = check_review(requestData.get('feedback'))
     except Exception as exception:
-        return response_message(exception.args, status_code=200)
+        return response_message(exception.args, status_code=500)
 
     auth_token = request.headers.get("Authorization")
     user = get_user(auth_token)
