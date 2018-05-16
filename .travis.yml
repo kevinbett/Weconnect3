@@ -10,6 +10,6 @@ script:
   - nosetests --with-coverage
 branches:
   only:
-  - feature
+  - ft-database-156041163
 after_success:
   - coveralls
