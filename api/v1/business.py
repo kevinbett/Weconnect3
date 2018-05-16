@@ -54,7 +54,7 @@ def view_businesses():
     if search_location:
         filtered_businesses = filtered_businesses.filter_by(location = search_location)
 
-    filtered_businesses = filtered_businesses.paginate(page, limit)
+    filtered_businesses = filtered_businesses.paginate(int(page), int(limit))
 
     businesses = [
         {
