@@ -5,9 +5,6 @@ from api.v1.validation import check_email, check_password, check_name
 
 auth = Blueprint('auth', __name__)
 
-users = []
-logged_in_user = None
-
 '''Implementing Register, login and user'''
 
 
@@ -60,8 +57,8 @@ def login():
         }
         return jsonify(res), 200
 
-@auth.route('/reset-password', methods=['POST'])
-def reset_password():
+@auth.route('/change-password', methods=['POST'])
+def change_password():
     auth_token = request.headers.get("Authorization")
     user = get_user(auth_token)
     if not isinstance(user, User):
@@ -78,3 +75,5 @@ def reset_password():
 
     return response_message("Password has been succesfully changed", status_code=200)
 
+# @auth.route('/reset-password', methods=['POST'])
+# def reset_password():
