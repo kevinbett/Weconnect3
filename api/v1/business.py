@@ -38,15 +38,17 @@ def register_business():
 
 @business_blueprint.route('/', methods=["GET"])
 def view_businesses():
-    search_query = request.args.get('q', '*')
+    search_query = request.args.get('q', None)
     search_category = request.args.get('category', None)
     search_location = request.args.get('location', None)
     page = request.args.get('page', 1)
     limit = request.args.get('limit', 20)
-    filtered_businesses = Business
+    filtered_businesses = Business.query
 
     if search_query:
-        filtered_businesses = filtered_businesses.query.filter_by(name=search_query)
+        # filtered_businesses = filtered_businesses.query.filter_by(name=search_query)
+        search_parameter = '%{}%'.format(search_query)
+        filtered_businesses = filtered_businesses.filter(Business.name.ilike(search_parameter))
     if search_category:
         filtered_businesses = filtered_businesses.filter_by(category = search_category)
     if search_location:
