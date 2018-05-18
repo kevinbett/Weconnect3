@@ -19,9 +19,9 @@ class BaseTestCase(unittest.TestCase):
             "password": "password"
         }
         self.business = {
-            "name": "Andela",
-            "type": "Mentorship",
-            "location":"Roysambu",
+            "name": "andela",
+            "type": "mentorship",
+            "location":"roysambu",
             "category":"food"
         }
         self.review = {
@@ -36,6 +36,8 @@ class BaseTestCase(unittest.TestCase):
 
 
     def tearDown(self):
-        db.drop_all()
+        with self.api.app_context():
+            db.session.remove()
+            db.drop_all()
 
 

@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/kevinbett/Weconnect3.svg?branch=ft-database-156041163)](https://travis-ci.org/kevinbett/Weconnect3)
-[![Coverage Status](https://coveralls.io/repos/github/kevinbett/WeConnect/badge.svg?branch=master)](https://coveralls.io/github/kevinbett/WeConnect?branch=master)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/057f3e0d62744341bb612426211c460c)](https://www.codacy.com/app/kevinbett/WeConnect?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=kevinbett/WeConnect&amp;utm_campaign=Badge_Grade)
-[![Maintainability](https://api.codeclimate.com/v1/badges/72e0ddb02eb5a2f368e9/maintainability)](https://codeclimate.com/github/kevinbett/WeConnect/maintainability)
+[![Coverage Status](https://coveralls.io/repos/github/kevinbett/Weconnect3/badge.svg?branch=ft-database-156041163)](https://coveralls.io/github/kevinbett/Weconnect3?branch=ft-database-156041163)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f544ca7fd5424e969a3aa7503e1b1aa5)](https://www.codacy.com/app/kevinbett/Weconnect3?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=kevinbett/Weconnect3&amp;utm_campaign=Badge_Grade)
+[![Maintainability](https://api.codeclimate.com/v1/badges/ed3bd87d71c43df42d64/maintainability)](https://codeclimate.com/github/kevinbett/Weconnect3/maintainability)
 
 # WeConnect
 

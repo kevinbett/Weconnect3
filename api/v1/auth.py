@@ -29,7 +29,7 @@ def register():
     user.save()
 
 
-    return response_message("User %s has been registered successfully" % (name),status_code=200)
+    return response_message("User %s has been registered successfully" % (name),status_code=201)
 
 
 @auth.route('/login', methods=["POST"])
@@ -113,29 +113,16 @@ def new_password(token):
 
     return response_message("Password has been successfully changed", status_code=200)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @auth.route('/logout', methods=['POST'])
-def log_out():
+def logout():
     auth_token = request.headers.get("Authorization")
     user = get_user(auth_token)
     if not isinstance(user, User):
         return response_message(user, 401)
 
-    user = User
+
+
+
+
+
+
