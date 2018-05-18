@@ -1,4 +1,5 @@
 from flask import jsonify
+from api.models import Blacklist
 
 def response_message(message, status_code=200):
     response = {
@@ -8,6 +9,12 @@ def response_message(message, status_code=200):
 
 def get_user(token, split_token=True):
     from api.models import User
+
+    check_token = Blacklist.query.filter_by(token=token).first()
+
+    if check_token:
+        return "Expired Token"
+
 
     if token:
         if split_token:
