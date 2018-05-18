@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from api.models import User
+from api.models import User, Blacklist
 from api.global_functions import response_message, get_user
 from api.v1.validation import check_email, check_password, check_name
 
@@ -113,13 +113,17 @@ def new_password(token):
 
     return response_message("Password has been successfully changed", status_code=200)
 
-@auth.route('/logout', methods=['POST'])
+@auth.route('/logout', methods=['GET'])
 def logout():
     auth_token = request.headers.get("Authorization")
     user = get_user(auth_token)
     if not isinstance(user, User):
         return response_message(user, 401)
 
+    blacklist = Blacklist(auth_token)
+    blacklist.save()
+
+    return response_message("You have been logged out", status_code=200)
 
 
 
