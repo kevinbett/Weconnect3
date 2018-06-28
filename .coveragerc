@@ -24,3 +24,8 @@ omit =
 		*virtualenv/*
 		*email/*
 		*smtplib.py*
+		*asyncio/*
+		*concurrent/*
+		*fractions.py*
+		*multiprocessing/*
+

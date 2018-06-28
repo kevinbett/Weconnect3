@@ -120,3 +120,23 @@ class Review(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+class Blacklist(db.Model):
+
+    __tablename__ = "blacklist"
+
+    id = db.Column(db.Integer, primary_key=True)
+    token = db.Column(db.String, nullable=False)
+
+
+    def __init__(self,token):
+        self.token = token
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+

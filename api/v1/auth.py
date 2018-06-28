@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from api.models import User
+from api.models import User, Blacklist
 from api.global_functions import response_message, get_user
 from api.v1.validation import check_email, check_password, check_name
 
@@ -36,7 +36,7 @@ def register():
     user.save()
 
 
-    return response_message("User %s has been registered successfully" % (name),status_code=200)
+    return response_message("User %s has been registered successfully" % (name),status_code=201)
 
 
 @auth.route('/login', methods=["POST"])
@@ -82,5 +82,58 @@ def change_password():
 
     return response_message("Password has been succesfully changed", status_code=200)
 
-# @auth.route('/reset-password', methods=['POST'])
-# def reset_password():
+
+@auth.route('/reset-password', methods=['POST'])
+def reset_password():
+    requestData = request.get_json()
+    try:
+        email = check_email(requestData.get('email'))
+    except Exception:
+        return response_message("Enter a valid email", status_code=400)
+
+    user = User.query.filter_by(email=email).first()
+    if user:
+        auth_token = user.encode_auth_token(user.id)
+
+        if auth_token:
+            link = "http://127.0.0.1:5000/reset-password/{}".format(auth_token.decode())
+            res = {
+                "message": "Reset your password from the provided token",
+                "link": link
+            }
+            return jsonify(res), 200
+
+
+@auth.route('/reset-password/<token>', methods=['POST'])
+def new_password(token):
+    requestData = request.get_json()
+    try:
+        new_password = check_password(requestData.get('new_password'))
+    except Exception:
+        return response_message("Enter a valid password", status_code=400)
+    user = get_user(token, split_token=False)
+    if not isinstance(user, User):
+        return response_message(user, 401)
+
+    user.set_password(new_password)
+    user.save()
+
+    return response_message("Password has been successfully changed", status_code=200)
+
+@auth.route('/logout', methods=['GET'])
+def logout():
+    auth_token = request.headers.get("Authorization")
+    user = get_user(auth_token)
+    if not isinstance(user, User):
+        return response_message(user, 401)
+
+    blacklist = Blacklist(auth_token)
+    blacklist.save()
+
+    return response_message("You have been logged out", status_code=200)
+
+
+
+
+
+

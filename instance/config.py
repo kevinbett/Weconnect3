@@ -5,7 +5,7 @@ class Config(object):
     DEBUG = False
     CSRF_ENABLED = True
     SECRET = os.getenv('SECRET') or 'this_is%very&secret*dont_tell$anyone'
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:andela@localhost/weconnect'
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') or 'postgresql://postgres:andela@localhost/weconnect'
 
 class DevelopmentConfig(Config):
     """Configurations for Development."""
