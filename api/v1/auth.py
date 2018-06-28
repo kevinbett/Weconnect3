@@ -25,7 +25,7 @@ def register():
         password = check_password(requestData.get('password'))
 
     except Exception as exception:
-        return response_message(exception.args, status_code=500)
+        return response_message(exception.args, status_code=400)
 
 #Check if email is already used
     user = User.query.filter_by(email=email).first()
@@ -36,7 +36,9 @@ def register():
     user.save()
 
 
-    return response_message("User %s has been registered successfully" % (name),status_code=201)
+    # return response_message("User %s has been registered successfully" % (name),status_code=201)
+    return response_message("User has been registered successfully",
+                            status_code=201)
 
 
 @auth.route('/login', methods=["POST"])
@@ -47,7 +49,7 @@ def login():
         email = check_email(requestData.get('email'))
         password = check_password(requestData.get('password'))
     except Exception as exception:
-        return response_message(exception.args, status_code=500)
+        return response_message(exception.args, status_code=400)
 
     user = User.query.filter_by(email=email).first()
     if not user:
