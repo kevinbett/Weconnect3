@@ -8,7 +8,14 @@ auth = Blueprint('auth', __name__)
 '''Implementing Register, login and user'''
 
 
+@auth.after_request # blueprint can also be app~~
+def after_request(response):
+   header = response.headers
+   header['Access-Control-Allow-Origin'] = '*'
+   return response
+
 @auth.route('/register', methods=["POST"])
+
 def register():
     requestData = request.get_json()
 
