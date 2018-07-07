@@ -91,8 +91,8 @@ def update_business(businessId):
     if not business:
         return response_message("The business you requested does not exist",
                                 status_code=404)
-    if business.name == name:
-        return response_message("The entry/field you are trying to update is a duplicate", status_code=400)
+    # if business.name == name:
+    #     return response_message("The entry/field you are trying to update is a duplicate", status_code=400)
 
     if business.user_id is not user.id:
         return response_message("You are not authorized to edit this business", status_code=401)
