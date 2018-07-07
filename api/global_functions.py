@@ -1,5 +1,5 @@
 from flask import jsonify
-from api.models import Blacklist
+from api.models import Blacklist, User
 
 def response_message(message, status_code=200):
     response = {
@@ -35,7 +35,7 @@ def format_reviews(reviews):
     formatted_reviews = []
     for review in reviews:
         rev = {
-
+            "username": User.query.filter_by(id=review.user_id).first().name,
             "feedback":review.feedback
         }
 

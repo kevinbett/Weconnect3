@@ -25,7 +25,8 @@ class BaseTestCase(unittest.TestCase):
             "category":"food"
         }
         self.review = {
-            "feedback": "feedback"
+            "feedback": "feedback",
+            "username": "test_user"
         }
 
     def authenticate(self):
