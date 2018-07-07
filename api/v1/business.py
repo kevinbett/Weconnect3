@@ -141,7 +141,8 @@ def get_businesses(businessId):
         "type": business.type,
         "category": business.category,
         "id": business.id,
-        "location": business.location
+        "location": business.location,
+        "user_id": business.user_id
     }
 
     return jsonify(business)
