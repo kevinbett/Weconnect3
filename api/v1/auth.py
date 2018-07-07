@@ -62,7 +62,8 @@ def login():
     if auth_token:
         res = {
             "message": "You are now logged in as {}".format(user.name),
-            "auth_token": auth_token.decode()
+            "auth_token": auth_token.decode(),
+            "user_id":user.id
         }
         return jsonify(res), 200
 
