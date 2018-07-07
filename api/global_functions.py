@@ -25,13 +25,11 @@ def get_user(token, split_token=True):
         if not isinstance(user_id, str):
             user = User.query.filter_by(id=user_id).first()
             return user
-        return {
-            'message': user_id
-        }
+        return user_id
 
-    return {
-        'message':'provide a valid token'
-    }
+
+    return 'provide a valid token'
+
 
 def format_reviews(reviews):
     formatted_reviews = []

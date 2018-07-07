@@ -80,7 +80,7 @@ def update_business(businessId):
         location = check_update(requestData.get("location"))
         category = check_update(requestData.get("category"))
     except Exception as exception:
-        return response_message(exception.args, status_code=500)
+        return response_message(exception.args, status_code=400)
 
     auth_token = request.headers.get("Authorization")
     user = get_user(auth_token)
@@ -118,7 +118,7 @@ def delete_business(businessId):
     auth_token = request.headers.get("Authorization")
     user = get_user(auth_token)
     if not isinstance(user, User):
-        return response_message(user, 401)
+        return response_message("Please login to delete", 401)
 
     business = Business.query.filter_by(id=businessId).first()
     if not business:
@@ -158,7 +158,7 @@ def add_review(businessId):
     auth_token = request.headers.get("Authorization")
     user = get_user(auth_token)
     if not isinstance(user, User):
-        return response_message(user, 401)
+        return response_message("Please login to review business", 401)
 
     business = Business.query.filter_by(id=businessId).first()
     if not business:
