@@ -179,6 +179,7 @@ def view_reviews(businessId):
 
     business = {
         "name": business.name,
+        "username":User.query.filter_by(id=business.user_id).first().name,
         "type": business.type,
         "category": business.category,
         "id": business.id,
