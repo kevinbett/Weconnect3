@@ -5,7 +5,7 @@ class AuthTestCase(BaseTestCase):
 
     def test_register(self):
         response = self.client().post('/register', data=json.dumps(self.user), content_type="application/json")
-        self.assertEquals("User test_user has been registered successfully", json.loads(response.data)["message"])
+        self.assertEquals("User has been registered successfully", json.loads(response.data)["message"])
         self.assertEqual(response.status_code, 201)
 
     def test_login(self):
