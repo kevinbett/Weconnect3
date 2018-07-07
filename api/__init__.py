@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from instance.config import app_config
 from api.v1.auth import auth as auth_blueprint
 from api.v1.business import business_blueprint

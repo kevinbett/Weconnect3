@@ -2,17 +2,11 @@ from flask import Blueprint, request, jsonify
 from api.models import User, Blacklist
 from api.global_functions import response_message, get_user
 from api.v1.validation import check_email, check_password, check_name
+from flask_cors import CORS, cross_origin
 
 auth = Blueprint('auth', __name__)
-
 '''Implementing Register, login and user'''
-
-
-@auth.after_request # blueprint can also be app~~
-def after_request(response):
-   header = response.headers
-   header['Access-Control-Allow-Origin'] = '*'
-   return response
+CORS(auth)
 
 @auth.route('/register', methods=["POST"])
 
