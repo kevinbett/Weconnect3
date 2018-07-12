@@ -42,7 +42,7 @@ def view_businesses():
     search_category = request.args.get('category', None)
     search_location = request.args.get('location', None)
     page = request.args.get('page', 1)
-    limit = request.args.get('limit', 20)
+    limit = request.args.get('limit', 2000)
     filtered_businesses = Business.query
 
     if search_query:
